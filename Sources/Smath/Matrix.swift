@@ -20,18 +20,25 @@ public class Matrix {
     public var elements: [Double]
     
     public init(rows: Int, columns: Int, elements: [Double]) {
+        precondition(rows > 0, "Rows must be greater than 0")
+        precondition(columns > 0, "Columns must be greater than 0")
+        precondition(elements.count == rows * columns, "Number of elements must equal rows * columns")
         self.rows = rows
         self.columns = columns
         self.elements = elements
     }
     
     public init(rows: Int, columns: Int, repeatedValue: Double) {
+        precondition(rows > 0, "Rows must be greater than 0")
+        precondition(columns > 0, "Columns must be greater than 0")
         self.rows = rows
         self.columns = columns
         self.elements = [Double](repeating: repeatedValue, count: rows * columns)
     }
     
     public init(rows: Int, columns: Int, generator: (Int, Int) -> Double) {
+        precondition(rows > 0, "Rows must be greater than 0")
+        precondition(columns > 0, "Columns must be greater than 0")
         self.rows = rows
         self.columns = columns
         self.elements = [Double](repeating: 0, count: rows * columns)
@@ -44,12 +51,18 @@ public class Matrix {
     }
 
     public init (rows: Int, columns: Int, values: Double...) {
+        precondition(rows > 0, "Rows must be greater than 0")
+        precondition(columns > 0, "Columns must be greater than 0")
+        precondition(values.count == rows * columns, "Number of elements must equal rows * columns")
         self.rows = rows
         self.columns = columns
         self.elements = values
     }
 
     public init (rows: Int, columns: Int, elements: [[Double]]) {
+        precondition(rows > 0, "Rows must be greater than 0")
+        precondition(columns > 0, "Columns must be greater than 0")
+        precondition(elements.count == rows, "Number of rows must equal rows")
         self.rows = rows
         self.columns = columns
         self.elements = [Double](repeating: 0, count: rows * columns)
