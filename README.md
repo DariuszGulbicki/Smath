@@ -1,3 +1,5 @@
+[![Swift](https://github.com/DariuszGulbicki/Smath/actions/workflows/swift.yml/badge.svg)](https://github.com/DariuszGulbicki/Smath/actions/workflows/swift.yml)
+
 # Smath
 
 **Smath** is a math library written in Swift. Currently, it provides support for matrices, but more features will be added in the future. The library is designed to be easy to use, efficient, and flexible.
