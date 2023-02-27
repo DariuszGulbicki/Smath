@@ -93,16 +93,12 @@ public class Matrix {
         return true
     }
 
-    public func isNotEqual(_ matrix: Matrix) -> Bool {
-        return !self.isEqual(matrix)
-    }
-
     public static func ==(lhs: Matrix, rhs: Matrix) -> Bool {
         return lhs.isEqual(rhs)
     }
 
     public static func !=(lhs: Matrix, rhs: Matrix) -> Bool {
-        return lhs.isNotEqual(rhs)
+        return !lhs.isEqual(rhs)
     }
 
     public func isSquare() -> Bool {
