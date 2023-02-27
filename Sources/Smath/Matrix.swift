@@ -105,6 +105,92 @@ public class Matrix {
         return lhs.isNotEqual(rhs)
     }
 
+    public func isSquare() -> Bool {
+        return self.rows == self.columns
+    }
+
+    public func hasSameDimensions(_ matrix: Matrix) -> Bool {
+        return self.rows == matrix.rows && self.columns == matrix.columns
+    }
+
+    public func getDiagonal() -> Matrix {
+        if self.isSquare() {
+            return Matrix(rows: self.rows, columns: self.columns) { i, j in
+                if i == j {
+                    return self[i, j]
+                } else {
+                    return 0
+                }
+            }
+        } else {
+            return Matrix(rows: 0, columns: 0, repeatedValue: 0)
+        }
+    }
+
+    public func getLowerTriangle() -> Matrix {
+        if self.isSquare() {
+            return Matrix(rows: self.rows, columns: self.columns) { i, j in
+                if i >= j {
+                    return self[i, j]
+                } else {
+                    return 0
+                }
+            }
+        } else {
+            return Matrix(rows: 0, columns: 0, repeatedValue: 0)
+        }
+    }
+
+    public func getUpperTriangle() -> Matrix {
+        if self.isSquare() {
+            return Matrix(rows: self.rows, columns: self.columns) { i, j in
+                if i <= j {
+                    return self[i, j]
+                } else {
+                    return 0
+                }
+            }
+        } else {
+            return Matrix(rows: 0, columns: 0, repeatedValue: 0)
+        }
+    }
+
+    public func getRow(_ row: Int) -> Matrix {
+        return Matrix(rows: 1, columns: self.columns) { i, j in
+            return self[row, j]
+        }
+    }
+
+    public func getColumn(_ column: Int) -> Matrix {
+        return Matrix(rows: self.rows, columns: 1) { i, j in
+            return self[i, column]
+        }
+    }
+
+    public func getSubMatrix(_ rowStart: Int, _ rowEnd: Int, _ columnStart: Int, _ columnEnd: Int) -> Matrix {
+        return Matrix(rows: rowEnd - rowStart + 1, columns: columnEnd - columnStart + 1) { i, j in
+            return self[rowStart + i, columnStart + j]
+        }
+    }
+
+    public func getSubMatrix(_ rowIndices: [Int], _ columnIndices: [Int]) -> Matrix {
+        return Matrix(rows: rowIndices.count, columns: columnIndices.count) { i, j in
+            return self[rowIndices[i], columnIndices[j]]
+        }
+    }
+
+    public func getSubMatrix(_ rowIndices: [Int], _ columnStart: Int, _ columnEnd: Int) -> Matrix {
+        return Matrix(rows: rowIndices.count, columns: columnEnd - columnStart + 1) { i, j in
+            return self[rowIndices[i], columnStart + j]
+        }
+    }
+
+    public func getSubMatrix(_ rowStart: Int, _ rowEnd: Int, _ columnIndices: [Int]) -> Matrix {
+        return Matrix(rows: rowEnd - rowStart + 1, columns: columnIndices.count) { i, j in
+            return self[rowStart + i, columnIndices[j]]
+        }
+    }
+
     public func add(_ matrix: Matrix) -> Matrix {
         return self.map { i, j, value in
             return value + matrix[i, j]
