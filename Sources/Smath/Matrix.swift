@@ -40,6 +40,12 @@ public class Matrix {
             }
         }
     }
+
+    public init (rows: Int, columns: Int, values: Double...) {
+        self.rows = rows
+        self.columns = columns
+        self.elements = values
+    }
     
     public subscript(row: Int, column: Int) -> Double {
         get {
