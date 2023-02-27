@@ -16,9 +16,6 @@ let package = Package(
         .target(
             name: "Smath",
             dependencies: []),
-        .executableTarget(
-            name: "Examples",
-            dependencies: ["Smath"]),
         .testTarget(
             name: "SmathTests",
             dependencies: ["Smath"]),
