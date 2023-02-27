@@ -93,6 +93,10 @@ public class Matrix {
         return true
     }
 
+    public func isNotEqual(_ matrix: Matrix) -> Bool {
+        return !self.isEqual(matrix)
+    }
+
     public func add(_ matrix: Matrix) -> Matrix {
         return self.map { i, j, value in
             return value + matrix[i, j]
