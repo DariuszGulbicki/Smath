@@ -93,6 +93,17 @@ public class Matrix {
         return true
     }
 
+    public func isZero() -> Bool {
+        for i in 0..<self.rows {
+            for j in 0..<self.columns {
+                if self[i, j] != 0 {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
     public static func ==(lhs: Matrix, rhs: Matrix) -> Bool {
         return lhs.isEqual(rhs)
     }
