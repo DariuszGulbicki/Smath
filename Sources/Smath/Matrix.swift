@@ -79,6 +79,20 @@ public class Matrix {
         }
     }
 
+    public func isEqual(_ matrix: Matrix) -> Bool {
+        if self.rows != matrix.rows || self.columns != matrix.columns {
+            return false
+        }
+        for i in 0..<self.rows {
+            for j in 0..<self.columns {
+                if self[i, j] != matrix[i, j] {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
     public func add(_ matrix: Matrix) -> Matrix {
         return self.map { i, j, value in
             return value + matrix[i, j]
