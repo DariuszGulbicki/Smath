@@ -2,6 +2,7 @@ import Foundation
 
 infix operator ===: ComparisonPrecedence
 prefix operator %
+prefix operator ~
 
 public class Vector: ExpressibleByArrayLiteral {
 
@@ -32,6 +33,14 @@ public class Vector: ExpressibleByArrayLiteral {
 
     public var count: Int {
         return elements.count
+    }
+
+    public var rounded: Vector {
+        return Vector(elements: elements.map { $0.rounded() })
+    }
+
+    public static prefix func ~(_ vector: Vector) -> Vector {
+        return vector.rounded
     }
 
     public func map(_ transform: (Double) throws -> Double) rethrows -> Vector {
