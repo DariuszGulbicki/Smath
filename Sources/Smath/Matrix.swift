@@ -46,6 +46,17 @@ public class Matrix {
         self.columns = columns
         self.elements = values
     }
+
+    public init (rows: Int, columns: Int, elements: [[Double]]) {
+        self.rows = rows
+        self.columns = columns
+        self.elements = [Double](repeating: 0, count: rows * columns)
+        for i in 0..<rows {
+            for j in 0..<columns {
+                self[i, j] = elements[i][j]
+            }
+        }
+    }
     
     public subscript(row: Int, column: Int) -> Double {
         get {
