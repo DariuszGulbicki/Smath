@@ -6,10 +6,12 @@ import Foundation
 //infix operator /
 //infix operator ^
 //infix operator %
+infix operator ===
 prefix operator !
 prefix operator ~
 prefix operator |
 prefix operator %
+prefix operator *
 
 public class Matrix {
 
@@ -93,6 +95,20 @@ public class Matrix {
         return true
     }
 
+    public func isApproximatelyEqual(_ matrix: Matrix, tolerance: Double) -> Bool {
+        if self.rows != matrix.rows || self.columns != matrix.columns {
+            return false
+        }
+        for i in 0..<self.rows {
+            for j in 0..<self.columns {
+                if abs(self[i, j] - matrix[i, j]) > tolerance {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
     public func isZero() -> Bool {
         for i in 0..<self.rows {
             for j in 0..<self.columns {
@@ -106,6 +122,10 @@ public class Matrix {
 
     public static func ==(lhs: Matrix, rhs: Matrix) -> Bool {
         return lhs.isEqual(rhs)
+    }
+
+    public static func ===(lhs: Matrix, rhs: Matrix) -> Bool {
+        return lhs.isApproximatelyEqual(rhs, tolerance: 0.1)
     }
 
     public static func !=(lhs: Matrix, rhs: Matrix) -> Bool {
@@ -130,7 +150,7 @@ public class Matrix {
                 }
             }
         } else {
-            return Matrix(rows: 0, columns: 0, repeatedValue: 0)
+            preconditionFailure("Matrix must be square")
         }
     }
 
@@ -144,7 +164,7 @@ public class Matrix {
                 }
             }
         } else {
-            return Matrix(rows: 0, columns: 0, repeatedValue: 0)
+            preconditionFailure("Matrix must be square")
         }
     }
 
@@ -158,7 +178,7 @@ public class Matrix {
                 }
             }
         } else {
-            return Matrix(rows: 0, columns: 0, repeatedValue: 0)
+            preconditionFailure("Matrix must be square")
         }
     }
 
@@ -199,15 +219,16 @@ public class Matrix {
     }
 
     public func add(_ matrix: Matrix) -> Matrix {
+        if !self.hasSameDimensions(matrix) {
+            preconditionFailure("Matrices must have the same dimensions")
+        }
         return self.map { i, j, value in
             return value + matrix[i, j]
         }
     }
 
     public static func +(lhs: Matrix, rhs: Matrix) -> Matrix {
-        return lhs.map { i, j, value in
-            return value + rhs[i, j]
-        }
+        return lhs.add(rhs)
     }
 
     public func add(_ scalar: Double) -> Matrix {
@@ -215,7 +236,7 @@ public class Matrix {
     }
 
     public static func +(lhs: Matrix, rhs: Double) -> Matrix {
-        return lhs.map { $0 + rhs }
+        return lhs.add(rhs)
     }
 
     public func subtract(_ matrix: Matrix) -> Matrix {
@@ -225,9 +246,7 @@ public class Matrix {
     }
 
     public static func -(lhs: Matrix, rhs: Matrix) -> Matrix {
-        return lhs.map { i, j, value in
-            return value - rhs[i, j]
-        }
+        return lhs.subtract(rhs)
     }
 
     public func subtract(_ scalar: Double) -> Matrix {
@@ -235,7 +254,7 @@ public class Matrix {
     }
 
     public static func -(lhs: Matrix, rhs: Double) -> Matrix {
-        return lhs.map { $0 - rhs }
+        return lhs.subtract(rhs)
     }
 
     public func multiply(_ matrix: Matrix) -> Matrix {
@@ -249,13 +268,7 @@ public class Matrix {
     }
 
     public static func *(lhs: Matrix, rhs: Matrix) -> Matrix {
-        return Matrix(rows: lhs.rows, columns: rhs.columns) { i, j in
-            var sum = 0.0
-            for k in 0..<lhs.columns {
-                sum += lhs[i, k] * rhs[k, j]
-            }
-            return sum
-        }
+        return lhs.multiply(rhs)
     }
 
     public func multiply(_ scalar: Double) -> Matrix {
@@ -263,7 +276,7 @@ public class Matrix {
     }
 
     public static func *(lhs: Matrix, rhs: Double) -> Matrix {
-        return lhs.map { $0 * rhs }
+        return lhs.multiply(rhs)
     }
 
     public func divide(_ matrix: Matrix) -> Matrix {
@@ -273,9 +286,7 @@ public class Matrix {
     }
 
     public static func /(lhs: Matrix, rhs: Matrix) -> Matrix {
-        return lhs.map { i, j, value in
-            return value / rhs[i, j]
-        }
+        return lhs.divide(rhs)
     }
 
     public func divide(_ scalar: Double) -> Matrix {
@@ -283,11 +294,11 @@ public class Matrix {
     }
 
     public static func /(lhs: Matrix, rhs: Double) -> Matrix {
-        return lhs.map { $0 / rhs }
+        return lhs.divide(rhs)
     }
 
     public func power(_ exponent: Matrix) -> Matrix {
-        var output = self
+        let output = self
         for i in 0..<rows {
             for j in 0..<columns {
                 output[i, j] = pow(self[i, j], exponent[i, j])
@@ -305,11 +316,11 @@ public class Matrix {
     }
 
     public static func ^(lhs: Matrix, rhs: Double) -> Matrix {
-        return lhs.map { pow($0, rhs) }
+        return lhs.power(rhs)
     }
 
     public func root(_ root: Matrix) -> Matrix {
-        var output = self
+        let output = self
         for i in 0..<rows {
             for j in 0..<columns {
                 output[i, j] = pow(self[i, j], 1 / root[i, j])
@@ -322,8 +333,12 @@ public class Matrix {
         return lhs.root(rhs)
     }
 
+    public func sqrt() -> Matrix {
+        return self.map { pow($0, 1 / 2) }
+    }
+
     public static prefix func %(matrix: Matrix) -> Matrix {
-        return matrix.map { pow($0, 1 / 2) }
+        return matrix.sqrt()
     }
 
     public func root(_ root: Double) -> Matrix {
@@ -331,7 +346,7 @@ public class Matrix {
     }
 
     public static func %(lhs: Matrix, rhs: Double) -> Matrix {
-        return lhs.map { pow($0, 1 / rhs) }
+        return lhs.root(rhs)
     }
 
     public func transpose() -> Matrix {
@@ -346,6 +361,10 @@ public class Matrix {
 
     public func dot(_ matrix: Matrix) -> Matrix {
         return self * matrix
+    }
+
+    public static prefix func *(matrix: Matrix) -> Matrix {
+        return matrix.dot(matrix)
     }
 
     public static func determinant(_ matrix: Matrix) -> Double {
