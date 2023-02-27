@@ -419,7 +419,7 @@ public class Matrix {
     }
 
     public static func determinant(_ matrix: Matrix) -> Double {
-        if !matrix.isSquare {
+        if !matrix.isSquare() {
             preconditionFailure("Matrix must be square")
         }
         if matrix.rows == 1 && matrix.columns == 1 {
@@ -437,7 +437,7 @@ public class Matrix {
     }
 
     public static func adjugate(_ matrix: Matrix) -> Matrix {
-        if !matrix.isSquare {
+        if !matrix.isSquare() {
             preconditionFailure("Matrix must be square")
         }
         var elements = [Double]()
