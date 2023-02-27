@@ -406,12 +406,19 @@ public class Matrix {
     }
 
     public func dot(_ matrix: Matrix) -> Matrix {
-        if !self.hasSameDimensions(matrix) {
-            preconditionFailure("Matrices must have the same dimensions")
+        guard self.columns == matrix.rows else {
+            preconditionFailure("Matrices must have compatible dimensions")
         }
-        return self.map { i, j, value in
-            return value * matrix[i, j]
+        let result = Matrix(rows: self.rows, columns: matrix.columns, repeatedValue: 0)
+        for i in 0..<self.rows {
+            for j in 0..<matrix.columns {
+                for k in 0..<self.columns {
+                    result[i, j] += self[i, k] * matrix[k, j]
+                }
+            }
         }
+        
+        return result
     }
 
     public static prefix func *(matrix: Matrix) -> Matrix {
