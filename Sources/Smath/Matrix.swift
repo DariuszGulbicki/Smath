@@ -6,10 +6,12 @@ import Foundation
 //infix operator /
 //infix operator ^
 //infix operator %
+infix operator ===
 prefix operator !
 prefix operator ~
 prefix operator |
 prefix operator %
+prefix operator *
 
 public class Matrix {
 
@@ -18,18 +20,25 @@ public class Matrix {
     public var elements: [Double]
     
     public init(rows: Int, columns: Int, elements: [Double]) {
+        precondition(rows > 0, "Rows must be greater than 0")
+        precondition(columns > 0, "Columns must be greater than 0")
+        precondition(elements.count == rows * columns, "Number of elements must equal rows * columns")
         self.rows = rows
         self.columns = columns
         self.elements = elements
     }
     
     public init(rows: Int, columns: Int, repeatedValue: Double) {
+        precondition(rows > 0, "Rows must be greater than 0")
+        precondition(columns > 0, "Columns must be greater than 0")
         self.rows = rows
         self.columns = columns
         self.elements = [Double](repeating: repeatedValue, count: rows * columns)
     }
     
     public init(rows: Int, columns: Int, generator: (Int, Int) -> Double) {
+        precondition(rows > 0, "Rows must be greater than 0")
+        precondition(columns > 0, "Columns must be greater than 0")
         self.rows = rows
         self.columns = columns
         self.elements = [Double](repeating: 0, count: rows * columns)
@@ -37,6 +46,29 @@ public class Matrix {
         for i in 0..<rows {
             for j in 0..<columns {
                 self[i, j] = generator(i, j)
+            }
+        }
+    }
+
+    public init (rows: Int, columns: Int, values: Double...) {
+        precondition(rows > 0, "Rows must be greater than 0")
+        precondition(columns > 0, "Columns must be greater than 0")
+        precondition(values.count == rows * columns, "Number of elements must equal rows * columns")
+        self.rows = rows
+        self.columns = columns
+        self.elements = values
+    }
+
+    public init (rows: Int, columns: Int, elements: [[Double]]) {
+        precondition(rows > 0, "Rows must be greater than 0")
+        precondition(columns > 0, "Columns must be greater than 0")
+        precondition(elements.count == rows, "Number of rows must equal rows")
+        self.rows = rows
+        self.columns = columns
+        self.elements = [Double](repeating: 0, count: rows * columns)
+        for i in 0..<rows {
+            for j in 0..<columns {
+                self[i, j] = elements[i][j]
             }
         }
     }
@@ -62,16 +94,172 @@ public class Matrix {
         }
     }
 
+    public func isEqual(_ matrix: Matrix) -> Bool {
+        if self.rows != matrix.rows || self.columns != matrix.columns {
+            return false
+        }
+        for i in 0..<self.rows {
+            for j in 0..<self.columns {
+                if self[i, j] != matrix[i, j] {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    public func isApproximatelyEqual(_ matrix: Matrix, tolerance: Double) -> Bool {
+        if self.rows != matrix.rows || self.columns != matrix.columns {
+            return false
+        }
+        for i in 0..<self.rows {
+            for j in 0..<self.columns {
+                if abs(self[i, j] - matrix[i, j]) > tolerance {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    public func isZero() -> Bool {
+        for i in 0..<self.rows {
+            for j in 0..<self.columns {
+                if self[i, j] != 0 {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    public static func ==(lhs: Matrix, rhs: Matrix) -> Bool {
+        return lhs.isEqual(rhs)
+    }
+
+    public static func ===(lhs: Matrix, rhs: Matrix) -> Bool {
+        return lhs.isApproximatelyEqual(rhs, tolerance: 0.1)
+    }
+
+    public static func !=(lhs: Matrix, rhs: Matrix) -> Bool {
+        return !lhs.isEqual(rhs)
+    }
+
+    public func isSquare() -> Bool {
+        return self.rows == self.columns
+    }
+
+    public func hasSameDimensions(_ matrix: Matrix) -> Bool {
+        return self.rows == matrix.rows && self.columns == matrix.columns
+    }
+
+    public func getDiagonal() -> Matrix {
+        if self.isSquare() {
+            return Matrix(rows: self.rows, columns: self.columns) { i, j in
+                if i == j {
+                    return self[i, j]
+                } else {
+                    return 0
+                }
+            }
+        } else {
+            preconditionFailure("Matrix must be square")
+        }
+    }
+
+    public func getLowerTriangle() -> Matrix {
+        if self.isSquare() {
+            return Matrix(rows: self.rows, columns: self.columns) { i, j in
+                if i >= j {
+                    return self[i, j]
+                } else {
+                    return 0
+                }
+            }
+        } else {
+            preconditionFailure("Matrix must be square")
+        }
+    }
+
+    public func getUpperTriangle() -> Matrix {
+        if self.isSquare() {
+            return Matrix(rows: self.rows, columns: self.columns) { i, j in
+                if i <= j {
+                    return self[i, j]
+                } else {
+                    return 0
+                }
+            }
+        } else {
+            preconditionFailure("Matrix must be square")
+        }
+    }
+
+    public func getRow(_ row: Int) -> Matrix {
+        if row >= self.rows || row < 0 {
+            preconditionFailure("Row index out of bounds")
+        }
+        return Matrix(rows: 1, columns: self.columns) { i, j in
+            return self[row, j]
+        }
+    }
+
+    public func getColumn(_ column: Int) -> Matrix {
+        if column >= self.columns || column < 0 {
+            preconditionFailure("Column index out of bounds")
+        }
+        return Matrix(rows: self.rows, columns: 1) { i, j in
+            return self[i, column]
+        }
+    }
+
+    public func getSubMatrix(_ rowStart: Int, _ rowEnd: Int, _ columnStart: Int, _ columnEnd: Int) -> Matrix {
+        if rowStart > rowEnd || columnStart > columnEnd || rowStart < 0 || rowEnd >= self.rows || columnStart < 0 || columnEnd >= self.columns {
+            preconditionFailure("Invalid submatrix indices")
+        }
+        return Matrix(rows: rowEnd - rowStart + 1, columns: columnEnd - columnStart + 1) { i, j in
+            return self[rowStart + i, columnStart + j]
+        }
+    }
+
+    public func getSubMatrix(_ rowIndices: [Int], _ columnIndices: [Int]) -> Matrix {
+        if rowIndices.max()! >= self.rows || rowIndices.min()! < 0 || columnIndices.max()! >= self.columns || columnIndices.min()! < 0 {
+            preconditionFailure("Invalid submatrix indices")
+        }
+        return Matrix(rows: rowIndices.count, columns: columnIndices.count) { i, j in
+            return self[rowIndices[i], columnIndices[j]]
+        }
+    }
+
+    public func getSubMatrix(_ rowIndices: [Int], _ columnStart: Int, _ columnEnd: Int) -> Matrix {
+        if columnStart > columnEnd || columnStart < 0 || columnEnd >= self.columns || rowIndices.max()! >= self.rows || rowIndices.min()! < 0 {
+            preconditionFailure("Invalid submatrix indices")
+        }
+        return Matrix(rows: rowIndices.count, columns: columnEnd - columnStart + 1) { i, j in
+            return self[rowIndices[i], columnStart + j]
+        }
+    }
+
+    public func getSubMatrix(_ rowStart: Int, _ rowEnd: Int, _ columnIndices: [Int]) -> Matrix {
+        if rowStart > rowEnd || rowStart < 0 || rowEnd >= self.rows || columnIndices.max()! >= self.columns || columnIndices.min()! < 0 {
+            preconditionFailure("Invalid submatrix indices")
+        }
+        return Matrix(rows: rowEnd - rowStart + 1, columns: columnIndices.count) { i, j in
+            return self[rowStart + i, columnIndices[j]]
+        }
+    }
+
     public func add(_ matrix: Matrix) -> Matrix {
+        if !self.hasSameDimensions(matrix) {
+            preconditionFailure("Matrices must have the same dimensions")
+        }
         return self.map { i, j, value in
             return value + matrix[i, j]
         }
     }
 
     public static func +(lhs: Matrix, rhs: Matrix) -> Matrix {
-        return lhs.map { i, j, value in
-            return value + rhs[i, j]
-        }
+        return lhs.add(rhs)
     }
 
     public func add(_ scalar: Double) -> Matrix {
@@ -79,19 +267,20 @@ public class Matrix {
     }
 
     public static func +(lhs: Matrix, rhs: Double) -> Matrix {
-        return lhs.map { $0 + rhs }
+        return lhs.add(rhs)
     }
 
     public func subtract(_ matrix: Matrix) -> Matrix {
+        if !self.hasSameDimensions(matrix) {
+            preconditionFailure("Matrices must have the same dimensions")
+        }
         return self.map { i, j, value in
             return value - matrix[i, j]
         }
     }
 
     public static func -(lhs: Matrix, rhs: Matrix) -> Matrix {
-        return lhs.map { i, j, value in
-            return value - rhs[i, j]
-        }
+        return lhs.subtract(rhs)
     }
 
     public func subtract(_ scalar: Double) -> Matrix {
@@ -99,10 +288,13 @@ public class Matrix {
     }
 
     public static func -(lhs: Matrix, rhs: Double) -> Matrix {
-        return lhs.map { $0 - rhs }
+        return lhs.subtract(rhs)
     }
 
     public func multiply(_ matrix: Matrix) -> Matrix {
+        if self.columns != matrix.rows {
+            preconditionFailure("Matrices must have compatible dimensions")
+        }
         return Matrix(rows: rows, columns: matrix.columns) { i, j in
             var sum = 0.0
             for k in 0..<self.columns {
@@ -113,13 +305,7 @@ public class Matrix {
     }
 
     public static func *(lhs: Matrix, rhs: Matrix) -> Matrix {
-        return Matrix(rows: lhs.rows, columns: rhs.columns) { i, j in
-            var sum = 0.0
-            for k in 0..<lhs.columns {
-                sum += lhs[i, k] * rhs[k, j]
-            }
-            return sum
-        }
+        return lhs.multiply(rhs)
     }
 
     public func multiply(_ scalar: Double) -> Matrix {
@@ -127,19 +313,20 @@ public class Matrix {
     }
 
     public static func *(lhs: Matrix, rhs: Double) -> Matrix {
-        return lhs.map { $0 * rhs }
+        return lhs.multiply(rhs)
     }
 
     public func divide(_ matrix: Matrix) -> Matrix {
+        if !self.hasSameDimensions(matrix) {
+            preconditionFailure("Matrices must have the same dimensions")
+        }
         return self.map { i, j, value in
             return value / matrix[i, j]
         }
     }
 
     public static func /(lhs: Matrix, rhs: Matrix) -> Matrix {
-        return lhs.map { i, j, value in
-            return value / rhs[i, j]
-        }
+        return lhs.divide(rhs)
     }
 
     public func divide(_ scalar: Double) -> Matrix {
@@ -147,11 +334,14 @@ public class Matrix {
     }
 
     public static func /(lhs: Matrix, rhs: Double) -> Matrix {
-        return lhs.map { $0 / rhs }
+        return lhs.divide(rhs)
     }
 
     public func power(_ exponent: Matrix) -> Matrix {
-        var output = self
+        if !self.hasSameDimensions(exponent) {
+            preconditionFailure("Matrices must have the same dimensions")
+        }
+        let output = self
         for i in 0..<rows {
             for j in 0..<columns {
                 output[i, j] = pow(self[i, j], exponent[i, j])
@@ -169,11 +359,14 @@ public class Matrix {
     }
 
     public static func ^(lhs: Matrix, rhs: Double) -> Matrix {
-        return lhs.map { pow($0, rhs) }
+        return lhs.power(rhs)
     }
 
     public func root(_ root: Matrix) -> Matrix {
-        var output = self
+        if !self.hasSameDimensions(root) {
+            preconditionFailure("Matrices must have the same dimensions")
+        }
+        let output = self
         for i in 0..<rows {
             for j in 0..<columns {
                 output[i, j] = pow(self[i, j], 1 / root[i, j])
@@ -186,8 +379,12 @@ public class Matrix {
         return lhs.root(rhs)
     }
 
+    public func sqrt() -> Matrix {
+        return self.map { pow($0, 1 / 2) }
+    }
+
     public static prefix func %(matrix: Matrix) -> Matrix {
-        return matrix.map { pow($0, 1 / 2) }
+        return matrix.sqrt()
     }
 
     public func root(_ root: Double) -> Matrix {
@@ -195,7 +392,7 @@ public class Matrix {
     }
 
     public static func %(lhs: Matrix, rhs: Double) -> Matrix {
-        return lhs.map { pow($0, 1 / rhs) }
+        return lhs.root(rhs)
     }
 
     public func transpose() -> Matrix {
@@ -209,14 +406,32 @@ public class Matrix {
     }
 
     public func dot(_ matrix: Matrix) -> Matrix {
-        return self * matrix
+        guard self.columns == matrix.rows else {
+            preconditionFailure("Matrices must have compatible dimensions")
+        }
+        let result = Matrix(rows: self.rows, columns: matrix.columns, repeatedValue: 0)
+        for i in 0..<self.rows {
+            for j in 0..<matrix.columns {
+                for k in 0..<self.columns {
+                    result[i, j] += self[i, k] * matrix[k, j]
+                }
+            }
+        }
+        
+        return result
+    }
+
+    public static prefix func *(matrix: Matrix) -> Matrix {
+        return matrix.dot(matrix)
     }
 
     public static func determinant(_ matrix: Matrix) -> Double {
+        if !matrix.isSquare() {
+            preconditionFailure("Matrix must be square")
+        }
         if matrix.rows == 1 && matrix.columns == 1 {
             return matrix[0, 0]
         }
-        
         var sum = 0.0
         for i in 0..<matrix.columns {
             sum += matrix[0, i] * Matrix.cofactor(matrix, row: 0, column: i)
@@ -229,6 +444,9 @@ public class Matrix {
     }
 
     public static func adjugate(_ matrix: Matrix) -> Matrix {
+        if !matrix.isSquare() {
+            preconditionFailure("Matrix must be square")
+        }
         var elements = [Double]()
         for i in 0..<matrix.rows {
             for j in 0..<matrix.columns {
@@ -259,7 +477,6 @@ public class Matrix {
         if determinant == 0 {
             return Matrix(rows: rows, columns: columns, repeatedValue: 0)
         }
-        
         var elements = [Double]()
         for i in 0..<rows {
             for j in 0..<columns {
