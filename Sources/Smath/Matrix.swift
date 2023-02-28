@@ -529,44 +529,36 @@ public class Matrix: ExpressibleByArrayLiteral, CustomStringConvertible {
         return matrix.map { -$0 }
     }
 
-    public func insert(_ matrix: Matrix, row: Int, column: Int) -> Matrix {
-        var output = self
-        for i in 0..<matrix.rows {
-            for j in 0..<matrix.columns {
-                output[row + i, column + j] = matrix[i, j]
+    public func insertColumn(_ column: [Double], at index: Int) -> Matrix {
+        guard column.count == rows else {
+            preconditionFailure("Column must have the same number of rows as the matrix")
+        }
+        var elements = [Double]()
+        for i in 0..<rows {
+            for j in 0..<columns {
+                if j == index {
+                    elements.append(column[i])
+                }
+                elements.append(self[i, j])
             }
         }
-        return output
+        return Matrix(rows: rows, columns: columns + 1, elements: elements)
     }
 
-    public func insert(_ matrix: Matrix, row: Int) -> Matrix {
-        return self.insert(matrix, row: row, column: 0)
-    }
-
-    public func insert(_ matrix: Matrix, column: Int) -> Matrix {
-        return self.insert(matrix, row: 0, column: column)
-    }
-
-    public func insert(_ matrix: Matrix) -> Matrix {
-        return self.insert(matrix, row: 0, column: 0)
-    }
-
-    public func insert(_ value: Double, row: Int, column: Int) -> Matrix {
-        var output = self
-        output[row, column] = value
-        return output
-    }
-
-    public func insert(_ value: Double, row: Int) -> Matrix {
-        return self.insert(value, row: row, column: 0)
-    }
-
-    public func insert(_ value: Double, column: Int) -> Matrix {
-        return self.insert(value, row: 0, column: column)
-    }
-
-    public func insert(_ value: Double) -> Matrix {
-        return self.insert(value, row: 0, column: 0)
+    public func insertRow(_ row: [Double], at index: Int) -> Matrix {
+        guard row.count == columns else {
+            preconditionFailure("Row must have the same number of columns as the matrix")
+        }
+        var elements = [Double]()
+        for i in 0..<rows {
+            for j in 0..<columns {
+                if i == index {
+                    elements.append(row[j])
+                }
+                elements.append(self[i, j])
+            }
+        }
+        return Matrix(rows: rows + 1, columns: columns, elements: elements)
     }
     
 }
