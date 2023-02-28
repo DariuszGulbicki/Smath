@@ -9,7 +9,7 @@ prefix operator |
 prefix operator ||
 prefix operator ∑
 
-public class Vector: ExpressibleByArrayLiteral {
+public class Vector: ExpressibleByArrayLiteral, CustomStringConvertible {
 
     public var elements: [Double]
 

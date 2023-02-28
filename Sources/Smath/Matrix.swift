@@ -7,7 +7,7 @@ prefix operator |
 prefix operator %
 prefix operator *
 
-public class Matrix: ExpressibleByArrayLiteral {
+public class Matrix: ExpressibleByArrayLiteral, CustomStringConvertible {
 
     public var rows: Int
     public var columns: Int
