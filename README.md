@@ -1,4 +1,5 @@
-[![Swift](https://github.com/DariuszGulbicki/Smath/actions/workflows/swift.yml/badge.svg)](https://github.com/DariuszGulbicki/Smath/actions/workflows/swift.yml)
+[![Linux CI](https://github.com/DariuszGulbicki/Smath/actions/workflows/linux.yml/badge.svg)](https://github.com/DariuszGulbicki/Smath/actions/workflows/linux.yml)
+[![MacOS CI](https://github.com/DariuszGulbicki/Smath/actions/workflows/macOS.yml/badge.svg)](https://github.com/DariuszGulbicki/Smath/actions/workflows/macOS.yml)
 
 # Smath
 
