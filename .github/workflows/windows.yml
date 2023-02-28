@@ -14,10 +14,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Setup Swift
-        uses: mxcl/setup-swift@v1
+      - uses: compnerd/gha-setup-swift@main
         with:
-          version: '5.5.0'
+          branch: swift-5.5-release
+          tag: 5.5-RELEASE
       - name: Build
         run: swift build -v
       - name: Run tests
