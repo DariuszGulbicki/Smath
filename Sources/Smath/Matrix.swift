@@ -528,6 +528,46 @@ public class Matrix: ExpressibleByArrayLiteral, CustomStringConvertible {
     public static prefix func -(matrix: Matrix) -> Matrix {
         return matrix.map { -$0 }
     }
+
+    public func insert(_ matrix: Matrix, row: Int, column: Int) -> Matrix {
+        var output = self
+        for i in 0..<matrix.rows {
+            for j in 0..<matrix.columns {
+                output[row + i, column + j] = matrix[i, j]
+            }
+        }
+        return output
+    }
+
+    public func insert(_ matrix: Matrix, row: Int) -> Matrix {
+        return self.insert(matrix, row: row, column: 0)
+    }
+
+    public func insert(_ matrix: Matrix, column: Int) -> Matrix {
+        return self.insert(matrix, row: 0, column: column)
+    }
+
+    public func insert(_ matrix: Matrix) -> Matrix {
+        return self.insert(matrix, row: 0, column: 0)
+    }
+
+    public func insert(_ value: Double, row: Int, column: Int) -> Matrix {
+        var output = self
+        output[row, column] = value
+        return output
+    }
+
+    public func insert(_ value: Double, row: Int) -> Matrix {
+        return self.insert(value, row: row, column: 0)
+    }
+
+    public func insert(_ value: Double, column: Int) -> Matrix {
+        return self.insert(value, row: 0, column: column)
+    }
+
+    public func insert(_ value: Double) -> Matrix {
+        return self.insert(value, row: 0, column: 0)
+    }
     
 }
 
