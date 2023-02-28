@@ -4,7 +4,7 @@
 # Smath
 
 **Smath** is a math library written in Swift. This library provides a plathora of diferent utility functions and data structures for working with numbers, vectors, matrices, and more. Smath is designed to be lightweight and easy to use.
-Project was originally developed as a part of a AI/ML libratry for Swift named ***AIM***.
+Project was originally developed as a part of a AI/ML library for Swift named ***AIM***.
 
 ## Installation
 
