@@ -12,6 +12,17 @@ public class Matrix {
     public var rows: Int
     public var columns: Int
     public var elements: [Double]
+
+    public var description: String {
+        var description = ""
+        for i in 0..<rows {
+            for j in 0..<columns {
+                description += "\(self[i, j]) "
+            }
+            description += " | "
+        }
+        return description
+    }
     
     public init(rows: Int, columns: Int, elements: [Double]) {
         precondition(rows > 0, "Rows must be greater than 0")

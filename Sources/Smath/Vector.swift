@@ -13,6 +13,14 @@ public class Vector: ExpressibleByArrayLiteral {
 
     public var elements: [Double]
 
+    public var description: String {
+        return "Vector(\(elements))"
+    }
+
+    public init() {
+        self.elements = []
+    }
+
     public init(elements: [Double]) {
         self.elements = elements
     }
