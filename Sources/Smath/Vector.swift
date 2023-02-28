@@ -301,11 +301,11 @@ public class Vector: ExpressibleByArrayLiteral {
     }
 
     public func transpose() -> Matrix {
-        return Matrix(rows: 1, columns: count, elements: elements)
+        return Matrix(rows: count, columns: 1, elements: elements)
     }
 
     public func toMatrix() -> Matrix {
-        return Matrix(rows: count, columns: 1, elements: elements)
+        return Matrix(rows: 1, columns: count, elements: elements)
     }
 
     public func toMatrix(rows: Int, columns: Int) -> Matrix {
