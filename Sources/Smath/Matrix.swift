@@ -560,6 +560,56 @@ public class Matrix: ExpressibleByArrayLiteral, CustomStringConvertible {
         }
         return Matrix(rows: rows + 1, columns: columns, elements: elements)
     }
+
+    public func insertColumn(_ value: Double, at index: Int) -> Matrix {
+        var elements = [Double]()
+        for i in 0..<rows {
+            for j in 0..<columns {
+                if j == index {
+                    elements.append(value)
+                }
+                elements.append(self[i, j])
+            }
+        }
+        return Matrix(rows: rows, columns: columns + 1, elements: elements)
+    }
+
+    public func insertRow(_ value: Double, at index: Int) -> Matrix {
+        var elements = [Double]()
+        for i in 0..<rows {
+            for j in 0..<columns {
+                if i == index {
+                    elements.append(value)
+                }
+                elements.append(self[i, j])
+            }
+        }
+        return Matrix(rows: rows + 1, columns: columns, elements: elements)
+    }
+
+    public func removeColumn(at index: Int) -> Matrix {
+        var elements = [Double]()
+        for i in 0..<rows {
+            for j in 0..<columns {
+                if j != index {
+                    elements.append(self[i, j])
+                }
+            }
+        }
+        return Matrix(rows: rows, columns: columns - 1, elements: elements)
+    }
+
+    public func removeRow(at index: Int) -> Matrix {
+        var elements = [Double]()
+        for i in 0..<rows {
+            for j in 0..<columns {
+                if i != index {
+                    elements.append(self[i, j])
+                }
+            }
+        }
+        return Matrix(rows: rows - 1, columns: columns, elements: elements)
+    }
     
 }
 
