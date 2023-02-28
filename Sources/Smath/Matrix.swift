@@ -1,11 +1,5 @@
 import Foundation
 
-//infix operator +
-//infix operator -
-//infix operator *
-//infix operator /
-//infix operator ^
-//infix operator %
 infix operator ===
 prefix operator !
 prefix operator ~

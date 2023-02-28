@@ -3,6 +3,11 @@ import Foundation
 infix operator ===: ComparisonPrecedence
 prefix operator %
 prefix operator ~
+prefix operator +
+prefix operator -
+prefix operator |
+prefix operator ||
+prefix operator ∑
 
 public class Vector: ExpressibleByArrayLiteral {
 
@@ -37,10 +42,6 @@ public class Vector: ExpressibleByArrayLiteral {
 
     public var rounded: Vector {
         return Vector(elements: elements.map { $0.rounded() })
-    }
-
-    public static prefix func ~(_ vector: Vector) -> Vector {
-        return vector.rounded
     }
 
     public func map(_ transform: (Double) throws -> Double) rethrows -> Vector {
@@ -257,8 +258,20 @@ public class Vector: ExpressibleByArrayLiteral {
         return elements.reduce(0, +)
     }
 
+    public static prefix func ∑(_ vector: Vector) -> Double {
+        return vector.sum()
+    }
+
+    public static prefix func +(_ vector: Vector) -> Double {
+        return vector.sum()
+    }
+
     public func mean() -> Double {
         return sum() / Double(count)
+    }
+
+    public static prefix func -(_ vector: Vector) -> Double {
+        return vector.mean()
     }
 
     public func std() -> Double {
@@ -267,11 +280,21 @@ public class Vector: ExpressibleByArrayLiteral {
         return sqrt(squaredDifferences.sum() / Double(count))
     }
 
+    public static prefix func ||(_ vector: Vector) -> Double {
+        return vector.std()
+    }
+
     public func normalize() -> Vector {
         let mean = self.mean()
         let std = self.std()
         return map { ($0 - mean) / std }
     }
+
+    public static prefix func ~(_ vector: Vector) -> Vector {
+        return vector.normalize()
+    }
+
+    
 
     public func dot(_ vector: Vector) -> Double {
         return zip(elements, vector.elements).map(*).reduce(0, +)
