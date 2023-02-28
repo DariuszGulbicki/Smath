@@ -7,7 +7,7 @@ prefix operator |
 prefix operator %
 prefix operator *
 
-public class Matrix {
+public class Matrix: ExpressibleByArrayLiteral {
 
     public var rows: Int
     public var columns: Int
@@ -70,6 +70,19 @@ public class Matrix {
         precondition(elements.count == rows, "Number of rows must equal rows")
         self.rows = rows
         self.columns = columns
+        self.elements = [Double](repeating: 0, count: rows * columns)
+        for i in 0..<rows {
+            for j in 0..<columns {
+                self[i, j] = elements[i][j]
+            }
+        }
+    }
+
+    public required init(arrayLiteral elements: [Double]...) {
+        precondition(elements.count > 0, "Rows must be greater than 0")
+        precondition(elements[0].count > 0, "Columns must be greater than 0")
+        self.rows = elements.count
+        self.columns = elements[0].count
         self.elements = [Double](repeating: 0, count: rows * columns)
         for i in 0..<rows {
             for j in 0..<columns {
