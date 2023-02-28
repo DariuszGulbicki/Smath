@@ -13,6 +13,10 @@ public class Matrix: ExpressibleByArrayLiteral {
     public var columns: Int
     public var elements: [Double]
 
+    public var count: Int {
+        return rows * columns
+    }
+
     public var description: String {
         var description = ""
         for i in 0..<rows {
@@ -79,6 +83,19 @@ public class Matrix: ExpressibleByArrayLiteral {
     }
 
     public required init(arrayLiteral elements: [Double]...) {
+        precondition(elements.count > 0, "Rows must be greater than 0")
+        precondition(elements[0].count > 0, "Columns must be greater than 0")
+        self.rows = elements.count
+        self.columns = elements[0].count
+        self.elements = [Double](repeating: 0, count: rows * columns)
+        for i in 0..<rows {
+            for j in 0..<columns {
+                self[i, j] = elements[i][j]
+            }
+        }
+    }
+
+    public required init(_ elements: [[Double]]) {
         precondition(elements.count > 0, "Rows must be greater than 0")
         precondition(elements[0].count > 0, "Columns must be greater than 0")
         self.rows = elements.count
