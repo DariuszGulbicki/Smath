@@ -17,6 +17,10 @@ public class Matrix: ExpressibleByArrayLiteral, CustomStringConvertible {
         return rows * columns
     }
 
+    public var invertible: Bool {
+        return |self != 0
+    }
+
     public var description: String {
         var description = ""
         for i in 0..<rows {
@@ -538,11 +542,21 @@ public class Matrix: ExpressibleByArrayLiteral, CustomStringConvertible {
         }
         return Matrix.adjugate(self) / determinant
     }
-        
 
+    public func pseudoInverse() -> Matrix {
+        return (~self * self).inverse() * ~self
+    }
+
+    public func autoInverse() -> Matrix {
+        if self.invertible {
+            return self.inverse()
+        } else {
+            return self.pseudoInverse()
+        }
+    }
 
     public static prefix func !(matrix: Matrix) -> Matrix {
-        return matrix.inverse()
+        return matrix.autoInverse()
     }
 
     public static prefix func -(matrix: Matrix) -> Matrix {
