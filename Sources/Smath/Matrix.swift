@@ -529,18 +529,17 @@ public class Matrix: ExpressibleByArrayLiteral, CustomStringConvertible {
     }
 
     public func inverse() -> Matrix {
-        let determinant = Matrix.determinant(self)
+        if !self.isSquare() {
+            preconditionFailure("Matrix must be square")
+        }
+        let determinant = |self
         if determinant == 0 {
-            return Matrix(rows: rows, columns: columns, repeatedValue: 0)
+            preconditionFailure("Matrix must be invertible")
         }
-        var elements = [Double]()
-        for i in 0..<rows {
-            for j in 0..<columns {
-                elements.append(Matrix.cofactor(self, row: i, column: j) / determinant)
-            }
-        }
-        return Matrix(rows: rows, columns: columns, elements: elements).transpose()
+        return Matrix.adjugate(self) / determinant
     }
+        
+
 
     public static prefix func !(matrix: Matrix) -> Matrix {
         return matrix.inverse()
