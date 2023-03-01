@@ -351,6 +351,27 @@ public class Matrix: ExpressibleByArrayLiteral, CustomStringConvertible {
         return lhs.multiply(rhs)
     }
 
+    public static func *(lhs: Double, rhs: Matrix) -> Matrix {
+        return rhs.multiply(lhs)
+    }
+
+    public func multiply (_ vector: Vector) -> Vector {
+        if self.columns != vector.count {
+            preconditionFailure("Matrix and vector must have compatible dimensions")
+        }
+        let output = Vector(count: self.rows, repeatedValue: 0)
+        for i in 0..<self.rows {
+            for j in 0..<self.columns {
+                output[i] += self[i, j] * vector[j]
+            }
+        }
+        return output
+    }
+
+    public static func *(lhs: Matrix, rhs: Vector) -> Vector {
+        return lhs.multiply(rhs)
+    }
+
     public func divide(_ matrix: Matrix) -> Matrix {
         if !self.hasSameDimensions(matrix) {
             preconditionFailure("Matrices must have the same dimensions")

@@ -136,6 +136,14 @@ class MatrixTest: XCTestCase {
         XCTAssertEqual(multipliedMatrix[1, 1], 8)
     }
 
+    func testMatrixMultiplyVector() {
+        let matrix = Matrix(rows: 2, columns: 2, elements: [1, 2, 3, 4])
+        let vector = Vector(elements: [1, 2])
+        let multipliedVector = matrix.multiply(vector)
+        XCTAssertEqual(multipliedVector[0], 5)
+        XCTAssertEqual(multipliedVector[1], 11)
+    }
+
     func testMatrixDivide() {
         let matrix1 = Matrix(rows: 2, columns: 2, elements: [1, 2, 3, 4])
         let matrix2 = Matrix(rows: 2, columns: 2, elements: [1, 2, 3, 4])
