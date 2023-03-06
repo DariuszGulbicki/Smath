@@ -297,7 +297,25 @@ class MatrixTest: XCTestCase {
         XCTAssertEqual(inverse[1, 1], -0.5)
     }
 
-    func testMatrixInverseOperator() {
+    func testMatrixPseudoInverse() {
+        let matrix = Matrix(rows: 2, columns: 2, elements: [1, 2, 3, 4])
+        let inverse = matrix.pseudoInverse()
+        XCTAssertEqual(inverse[0, 0], -2)
+        XCTAssertEqual(inverse[0, 1], 1)
+        XCTAssertEqual(inverse[1, 0], 1.5)
+        XCTAssertEqual(inverse[1, 1], -0.5)
+    }
+
+    func testMatrixAutoInverse() {
+        let matrix = Matrix(rows: 3, columns: 3, elements: [1, 2, 3, 4, 5, 6, 7, 8, 9])
+        let inverse = matrix.autoInverse()
+        XCTAssertEqual(inverse[0, 0], -2)
+        XCTAssertEqual(inverse[0, 1], 1)
+        XCTAssertEqual(inverse[1, 0], 1.5)
+        XCTAssertEqual(inverse[1, 1], -0.5)
+    }
+
+    func testMatrixAutoInverseOperator() {
         let matrix = Matrix(rows: 2, columns: 2, elements: [1, 2, 3, 4])
         let inverse = !matrix
         XCTAssertEqual(inverse[0, 0], -2)

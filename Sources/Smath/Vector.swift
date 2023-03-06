@@ -278,7 +278,7 @@ public class Vector: ExpressibleByArrayLiteral, CustomStringConvertible {
         return sum() / Double(count)
     }
 
-    public static prefix func -(_ vector: Vector) -> Double {
+    public static prefix func |(_ vector: Vector) -> Double {
         return vector.mean()
     }
 
@@ -301,8 +301,6 @@ public class Vector: ExpressibleByArrayLiteral, CustomStringConvertible {
     public static prefix func ~(_ vector: Vector) -> Vector {
         return vector.normalize()
     }
-
-    
 
     public func dot(_ vector: Vector) -> Double {
         return zip(elements, vector.elements).map(*).reduce(0, +)

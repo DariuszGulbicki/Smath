@@ -21,6 +21,12 @@ public class Matrix: ExpressibleByArrayLiteral, CustomStringConvertible {
         return |self != 0
     }
 
+    public var identity: Matrix {
+        return Matrix(rows: rows, columns: columns, generator: { (i, j) -> Double in
+            return i == j ? 1 : 0
+        })
+    }
+
     public var description: String {
         var description = ""
         for i in 0..<rows {
@@ -545,6 +551,10 @@ public class Matrix: ExpressibleByArrayLiteral, CustomStringConvertible {
 
     public func pseudoInverse() -> Matrix {
         return (~self * self).inverse() * ~self
+    }
+
+    public func regularizedPseudoInverse() -> Matrix {
+        return (~self * self + self.identity.inverse() * ~self).inverse() * ~self
     }
 
     public func autoInverse() -> Matrix {
