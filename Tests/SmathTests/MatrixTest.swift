@@ -21,6 +21,34 @@ class MatrixTest: XCTestCase {
         XCTAssertEqual(mappedMatrix[1, 1], 8)
     }
 
+    func testMatrixIdentity() {
+        let matrix = Matrix(rows: 3, columns: 3, elements: [1, 2, 3, 4, 5, 6, 7, 8, 9])
+        let identityMatrix = matrix.identity
+        XCTAssertEqual(identityMatrix[0, 0], 1)
+        XCTAssertEqual(identityMatrix[0, 1], 0)
+        XCTAssertEqual(identityMatrix[0, 2], 0)
+        XCTAssertEqual(identityMatrix[1, 0], 0)
+        XCTAssertEqual(identityMatrix[1, 1], 1)
+        XCTAssertEqual(identityMatrix[1, 2], 0)
+        XCTAssertEqual(identityMatrix[2, 0], 0)
+        XCTAssertEqual(identityMatrix[2, 1], 0)
+        XCTAssertEqual(identityMatrix[2, 2], 1)
+    }
+
+    func testMatrixIdentityNotSquare() {
+        let matrix = Matrix(rows: 3, columns: 2, elements: [1, 2, 3, 4, 5, 6])
+        let identityMatrix = matrix.identity
+        XCTAssertEqual(identityMatrix[0, 0], 1)
+        XCTAssertEqual(identityMatrix[0, 1], 0)
+        XCTAssertEqual(identityMatrix[0, 2], 0)
+        XCTAssertEqual(identityMatrix[1, 0], 0)
+        XCTAssertEqual(identityMatrix[1, 1], 1)
+        XCTAssertEqual(identityMatrix[1, 2], 0)
+        XCTAssertEqual(identityMatrix[2, 0], 0)
+        XCTAssertEqual(identityMatrix[2, 1], 0)
+        XCTAssertEqual(identityMatrix[2, 2], 1)
+    }
+
     func testMatrixAdd() {
         let matrix1 = Matrix(rows: 2, columns: 2, elements: [1, 2, 3, 4])
         let matrix2 = Matrix(rows: 2, columns: 2, elements: [1, 2, 3, 4])

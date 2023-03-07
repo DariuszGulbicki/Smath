@@ -22,7 +22,8 @@ public class Matrix: ExpressibleByArrayLiteral, CustomStringConvertible {
     }
 
     public var identity: Matrix {
-        return Matrix(rows: rows, columns: columns, generator: { (i, j) -> Double in
+        let larger = max(rows, columns)
+        return Matrix(rows: larger, columns: larger, generator: { (i, j) -> Double in
             return i == j ? 1 : 0
         })
     }
@@ -656,4 +657,3 @@ public class Matrix: ExpressibleByArrayLiteral, CustomStringConvertible {
     }
     
 }
-
