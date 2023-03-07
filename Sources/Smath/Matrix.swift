@@ -9,6 +9,12 @@ prefix operator *
 
 public class Matrix: ExpressibleByArrayLiteral, CustomStringConvertible {
 
+    public static func identity(_ size: Int) -> Matrix {
+        return Matrix(rows: size, columns: size, generator: { (i, j) -> Double in
+            return i == j ? 1 : 0
+        })
+    }
+
     public var rows: Int
     public var columns: Int
     public var elements: [Double]
