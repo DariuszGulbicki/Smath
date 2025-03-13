@@ -654,6 +654,10 @@ public class Matrix: ExpressibleByArrayLiteral, CustomStringConvertible {
         }
         return Matrix(rows: rows - 1, columns: columns, elements: elements)
     }
+
+    public func apply(_ function: (Double) -> Double) -> Matrix {
+        return self.map(function)
+    }
     
 }
 
